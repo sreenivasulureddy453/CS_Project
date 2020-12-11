@@ -1,0 +1,62 @@
+//BluetoothBasedFanLightDoorLock
+
+#include <Servo.h>
+Servo myservo;  
+int pos = 0;    
+
+const int ledPin=7;       
+const int fanPin=8;       
+
+void setup() {
+ Serial.begin(9600);
+ pinMode(ledPin, OUTPUT);  
+ pinMode(fanPin, OUTPUT);  
+ myservo.attach(9);  
+
+}
+
+void loop() {
+while(Serial.available()>0){
+char inputByte= Serial.read();
+Serial.print("Input Value is : ");
+Serial.println(inputByte);
+
+if (inputByte=='D'){
+Serial.println("DOOR IS UNLOCKED!!");
+  for (pos = 0; pos <= 180; pos += 1) { 
+    myservo.write(pos);              
+    delay(15);                       
+  }
+  digitalWrite(ledPin,HIGH);
+  Serial.println("LIGHT IS SWITCHED ON!");
+  digitalWrite(fanPin,HIGH);
+  Serial.println("FAN IS SWITCHED ON!");
+}
+
+else if (inputByte=='d'){
+Serial.println("DOOR IS LOCKED!!");
+  
+  for (pos = 180; pos >= 0; pos -= 1) {
+    myservo.write(pos);         
+    delay(15);                  
+    }
+}
+
+if(inputByte == 'L'){
+  Serial.println("LIGHT IS SWITCHED ON!!");
+  digitalWrite(ledPin,HIGH);
+}
+else if(inputByte == 'l'){
+  Serial.println("LIGHT IS SWITCHED OFF!!");
+  digitalWrite(ledPin,LOW);
+}
+else if(inputByte == 'F'){
+  Serial.println("FAN IS SWITCHED ON!!");
+  digitalWrite(fanPin,HIGH);
+}
+else if(inputByte == 'f'){
+  Serial.println("FAN IS SWITCHED OFF!!");
+  digitalWrite(fanPin,LOW);
+}
+}
+}
